@@ -1,9 +1,7 @@
-# GetSharepointSyncLink
-A powershell script that get all the Sharepoint link when sync with onedrive.
+A PowerShell script that retrieves all SharePoint libraries synchronized via OneDrive.
 
-Start the script with the user account, an export is made in the user onedrive directory ..\Documents\Backup Sharepoint
+Run the script as the logged-in user  — an export will be generated in the user's OneDrive directory at ..\Documents\Backup Sharepoint.
 
-On the other machine or after a remaster navigate to this folder then double clic on the .lnk to open UI interface to select which Sharepoint you wants to open with the web browser.
-You now just have to click on the Sync button for each page opened.
+On the new machine, or after a remaster, navigate to this folder and double-click the .lnk file to open the UI. Select which SharePoint libraries you want to open in your web browser, then click the Sync button on each opened page to restore synchronization.
 
 No support provided.
