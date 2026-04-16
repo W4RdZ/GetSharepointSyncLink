@@ -504,12 +504,24 @@ try {
     #endregion
 
     #region ETAPE 8 : Generer le raccourci .lnk
+    # Les arguments embarquent un bloc PowerShell inline qui teste successivement
+    # $env:OneDrive puis $env:OneDriveCommercial pour localiser le ps1 cible,
+    # sans aucun chemin absolu ni fichier intermediaire.
+    $subPath = "Documents\Backup Sharepoint\datas\Resynchroniser_SharePoint.ps1"
+    $lnkArgs = "-ExecutionPolicy Bypass -STA -WindowStyle Hidden -Command " +
+               "& { " +
+               "`$sub = '$subPath'; " +
+               "`$candidates = @(`$env:OneDrive, `$env:OneDriveCommercial) | Where-Object { `$_ -and (Test-Path (Join-Path `$_ `$sub)) }; " +
+               "if (`$candidates) { & (Join-Path `$candidates[0] `$sub) } " +
+               "else { [System.Windows.Forms.MessageBox]::Show('Impossible de localiser le script de restauration. Verifiez que OneDrive est connecte.', 'Erreur', 'OK', 'Error') }" +
+               " }"
+
     $lnkPath  = Join-Path $exportFolder "restaurer les sharepoint.lnk"
     $shell    = New-Object -ComObject WScript.Shell
     $shortcut = $shell.CreateShortcut($lnkPath)
     $shortcut.TargetPath       = "powershell.exe"
-    $shortcut.Arguments        = "-ExecutionPolicy Bypass -STA -WindowStyle Hidden -File `"datas\Resynchroniser_SharePoint.ps1`""
-    $shortcut.WorkingDirectory = $exportFolder
+    $shortcut.Arguments        = $lnkArgs
+    $shortcut.WorkingDirectory = ""
     $shortcut.IconLocation     = "shell32.dll,132"
     $shortcut.Save()
     Write-Host ($i18n.LnkGenerated -f $lnkPath) -ForegroundColor Gray
